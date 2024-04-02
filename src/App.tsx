@@ -1,11 +1,15 @@
+import Navbar from "./components/Navbar";
 
-function App() {
-
+const App =()=> {
+  
   return (
     <>
-      <h1 className="text-center text-2xl">E-Commerce with Typescript and Context API</h1>  
+      <Navbar />
+      <h1 className="text-center text-2xl">
+        E-Commerce with Typescript and Context API
+      </h1>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
