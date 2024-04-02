@@ -4,11 +4,8 @@ import { BASE_URL } from "../../utils/apiURL";
 export type ProductType = {
     brand: string;
     category: string;
-    description: string;
     discountPercentage: number;
     id: number;
-    rating: number;
-    stock: number;
     thumbnail: string;
     title: string;
 }
