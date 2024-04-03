@@ -1,5 +1,5 @@
 import { ReactElement, createContext, useEffect, useState } from "react";
-import { BASE_URL } from "../../utils/apiURL";
+import { BASE_URL } from "../utils/apiURL";
 
 export type ProductType = {
     brand: string;

@@ -1,13 +1,14 @@
+import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-
+import { BrowserRouter, Routes, Route  } from "react-router-dom";
 const App =()=> {
   
   return (
     <>
-      <Navbar />
-      <h1 className="text-center text-2xl">
-        E-Commerce with Typescript and Context API
-      </h1>
+      <BrowserRouter>
+        <Navbar />
+        <Footer />
+      </BrowserRouter>
     </>
   );
 }

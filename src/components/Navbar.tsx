@@ -39,6 +39,7 @@ const Navbar = () => {
         <div className="hover:text-orange-300">
             <FaShoppingCart className="text-2xl text-whinhover:text-orange-300" />
             <div className="cart-items-value absolute text-xl top-[-20px] right-[-8px] flex text-center justify-center">
+              <p className="text-white">0</p>
             </div>
         </div>
         <div className="flex items-center px-2">
