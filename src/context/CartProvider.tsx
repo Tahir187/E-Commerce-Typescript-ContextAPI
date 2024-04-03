@@ -1,7 +1,7 @@
 import { ReactElement, createContext, useMemo, useReducer } from "react";
 
 export type CartItemType = {
-  id: number;
+  id: string;
   title: string;
   discountPercentage: number;
   qty: number;
@@ -123,11 +123,12 @@ const useCartContext = (initialCartState: CartStateType) => {
     }, 0)
   )
 
+
   const cart = state.cart.sort((a, b) => {
-    const itemA = Number(a.id.slice(-4));
-    const itemB = Number(b.id.slice(-4));
-    return itemA - itemB;
-  })
+    const itemA = Number(a.id.slice(-4))
+    const itemB = Number(b.id.slice(-4))
+    return itemA - itemB
+})
 
   return { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart };
 };
