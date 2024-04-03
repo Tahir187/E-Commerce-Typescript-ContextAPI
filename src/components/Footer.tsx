@@ -18,7 +18,7 @@ const Footer = () => {
           </Link>
         </div>
         <span className="text-white block mt-2 font-medium text-sm">
-          &copy; 2024 E.com. All Rights Reserved.
+          &copy; {new Date().getFullYear()} E.com. All Rights Reserved.
         </span>
       </div>
     </footer>
