@@ -121,13 +121,13 @@ const useCartContext = (initialCartState: CartStateType) => {
     state.cart.reduce((previousValue: any, cartItem: any) => {
       return previousValue + cartItem.qty * cartItem.discountPercentage;
     }, 0)
-  );
+  )
 
   const cart = state.cart.sort((a, b) => {
     const itemA = Number(a.id.slice(-4));
     const itemB = Number(b.id.slice(-4));
     return itemA - itemB;
-  });
+  })
 
   return { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart };
 };
