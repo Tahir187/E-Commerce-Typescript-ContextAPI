@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
-import useCart from "../hooks/useCart";
 import {
   FaBars,
   FaShoppingBag,
   FaSearch,
   FaShoppingCart,
 } from "react-icons/fa";
-import CartModal from "./CartModal";
 
 const Navbar = () => {
-  const {totalItems} = useCart();
+  // const {totalItems} = useCart();
   return (
     <nav className="navbar flex justify-around items-center mx-auto gap-2 pt-3 pb-3 text-white bg-gradient-to-br from-indigo-500 to to-purple-800 md:text-sm sticky top-0 z-10 shadow-lg">
       {/* brand name with hamburger menu */}
@@ -43,7 +41,7 @@ const Navbar = () => {
           <Link to='/cart' className="relative">
             <FaShoppingCart className="text-2xl text-whinhover:text-orange-300" />
             <div className="cart-items-value absolute text-xl top-[-20px] right-[-8px] flex text-center justify-center">
-              <p className="text-white">{totalItems}</p>
+              <p className="text-white">0</p>
             </div>
             {/* <CartModal carts={carts} className="hidden" /> */}
             </Link>

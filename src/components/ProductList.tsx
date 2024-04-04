@@ -1,8 +1,22 @@
+import Product from "./Product";
 
-const ProductList = () => {
+const ProductList = ({ products }) => {
+    // console.log(products)
   return (
-    <div>ProductList</div>
-  )
-}
+    <div>
+      {products.map((product) => {
+        let discountedPrice: number =
+          product?.price - product?.price * (product?.discountPercentage / 100);
 
-export default ProductList
+          return(
+            <Product
+            key={product.id}
+            product={{...product, discountedPrice}}
+            />
+          )
+      })}
+    </div>
+  );
+};
+
+export default ProductList;

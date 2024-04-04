@@ -1,47 +1,111 @@
-import { ReactElement, createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { BASE_URL } from "../utils/apiURL";
 
-export type ProductType = {
-    brand: string;
-    category: string;
-    discountPercentage: number;
-    id: number;
-    thumbnail: string;
-    title: string;
+interface ProductType {
+  id: string;
+  brand: string;
+  category: string;
+  discountPercentage: number;
+  thumbnail: string[];
+  title: string;
 }
 
-const initialState: ProductType[] = [];
-
-
-export type UseProductsContextType = {products: ProductType[]};
-
-const initialContextState: UseProductsContextType = {products: []};
-
-export const ProductsContext = createContext<UseProductsContextType>(initialContextState);
-
-type ChildrenType = {children?: ReactElement | ReactElement[]};
-
-export const ProductsProvider = ({children}: ChildrenType): ReactElement =>{
-    const [products, setProducts] = useState<ProductType[]>(initialState);
-
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const res = await fetch(`${BASE_URL}products`);
-            const data = await res.json();
-            console.log(data.products);
-            return data.products;
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-
-        };
-        fetchData().then(products => setProducts(products));
-      }, []);
-    
-    return(
-        <ProductsContext.Provider value={{products}}>
-            {children}
-        </ProductsContext.Provider>
-    )
+interface ProductState {
+  products: ProductType[];
+  productsStatus: string;
+  productSingle: ProductType | null;
+  productSingleStatus: string;
 }
+
+interface ProductAction {
+  type: string;
+  payload: any;
+}
+
+const initialState: ProductState = {
+  products: [],
+  productsStatus: "IDLE",
+  productSingle: null,
+  productSingleStatus: "IDLE",
+};
+
+const ProductContext = createContext<{
+  state: ProductState;
+  dispatch: React.Dispatch<ProductAction>;
+}>({
+  state: initialState,
+  dispatch: () => null,
+});
+
+const productReducer = (state: ProductState, action: ProductAction) => {
+  switch (action.payload) {
+    case "FETCH_PRODUCTS_PENDING":
+      return { ...state, productsStatus: "LOADING" };
+    case "FETCH_PRODUCTS_FULFILLED":
+      return {
+        ...state,
+        products: action.payload,
+        productsStatus: "SUCCEEDED",
+      };
+    case "FETCH_PRODUCTS_FAILURE":
+      return { ...state, productsStatus: "FAILED" };
+    case "FETCH_PRODUCT_SINGLE_PENDING":
+      return { ...state, productSingleStatus: "LOADING" };
+    case "FETCH_PRODUCT_SINGLE_FULFILLED":
+      return {
+        ...state,
+        productSingle: action.payload,
+        productSingleStatus: "SUCCEEDED",
+      };
+    case "FETCH_PRODUCT_SINGLE_FAILURE":
+      return { ...state, productSingleStatus: "FAILED" };
+    default:
+      return state;
+  }
+};
+
+export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [state, dispatch] = useReducer(productReducer, initialState);
+
+  const fetchProducts = async () => {
+    dispatch({ type: "FETCH_PRODUCTS_PENDING", payload: null });
+
+    try {
+      const response = await fetch("https://dummyjson.com/products");
+      const data = await response.json();
+      console.log('data', data)
+      console.log("fetch products", data.products);
+      dispatch({ type: "FETCH_PRODUCTS_FULFILLED", payload: data.products });
+    } catch (error) {
+      dispatch({ type: "FETCH_PRODUCTS_FAILURE", payload: null });
+    }
+  };
+
+  const fetchSingleProduct = async () => {
+    dispatch({ type: "FETCH_PRODUCT_SINGLE_PENDING", payload: null });
+
+    try {
+      const response = await fetch(`https://dummyjson.com/products/1`);
+      const data = await response.json();
+      console.log("data", data);
+      dispatch({ type: "FETCH_PRODUCT_SINGLE_FULFILLED", payload: data });
+    } catch (error) {
+      dispatch({ type: "FETCH_PRODUCT_SINGLE_FAILURE", payload: null });
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+    fetchSingleProduct(); // You should also fetch the single product here if needed
+  }, []);
+
+  return (
+    <ProductContext.Provider value={{ state, dispatch }}>
+      {children}
+    </ProductContext.Provider>
+  );
+};
+
+export const useProduct = () => useContext(ProductContext);
