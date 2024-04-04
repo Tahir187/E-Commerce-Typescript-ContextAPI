@@ -29,7 +29,7 @@ const initialState: ProductState = {
   productSingleStatus: "IDLE",
 };
 
-const ProductContext = createContext<{
+export const ProductContext = createContext<{
   state: ProductState;
   dispatch: React.Dispatch<ProductAction>;
 }>({
@@ -38,7 +38,7 @@ const ProductContext = createContext<{
 });
 
 const productReducer = (state: ProductState, action: ProductAction) => {
-  switch (action.payload) {
+  switch (action.type) {
     case "FETCH_PRODUCTS_PENDING":
       return { ...state, productsStatus: "LOADING" };
     case "FETCH_PRODUCTS_FULFILLED":
@@ -68,17 +68,16 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(productReducer, initialState);
-
   const fetchProducts = async () => {
     dispatch({ type: "FETCH_PRODUCTS_PENDING", payload: null });
 
     try {
       const response = await fetch("https://dummyjson.com/products");
       const data = await response.json();
-      console.log('data', data)
-      console.log("fetch products", data.products);
+      console.log("fetch data products", data.products);
       dispatch({ type: "FETCH_PRODUCTS_FULFILLED", payload: data.products });
     } catch (error) {
+      console.log("error", error);
       dispatch({ type: "FETCH_PRODUCTS_FAILURE", payload: null });
     }
   };
@@ -98,7 +97,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchProducts();
-    fetchSingleProduct(); // You should also fetch the single product here if needed
+    fetchSingleProduct();
   }, []);
 
   return (
@@ -108,4 +107,4 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useProduct = () => useContext(ProductContext);
+// export const useProduct = () => useContext(ProductContext);
