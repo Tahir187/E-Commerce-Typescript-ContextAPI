@@ -6,8 +6,9 @@ interface ProductType {
   brand: string;
   category: string;
   discountPercentage: number;
-  thumbnail: string[];
+  thumbnail: string;
   title: string;
+  images: string[];
 }
 
 interface ProductState {
@@ -74,7 +75,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await fetch("https://dummyjson.com/products");
       const data = await response.json();
-      console.log("fetch data products", data.products);
+      // console.log("fetch data products", data.products);
       dispatch({ type: "FETCH_PRODUCTS_FULFILLED", payload: data.products });
     } catch (error) {
       console.log("error", error);
@@ -88,7 +89,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await fetch(`https://dummyjson.com/products/1`);
       const data = await response.json();
-      console.log("data", data);
+      // console.log("data", data);
       dispatch({ type: "FETCH_PRODUCT_SINGLE_FULFILLED", payload: data });
     } catch (error) {
       dispatch({ type: "FETCH_PRODUCT_SINGLE_FAILURE", payload: null });
@@ -107,4 +108,4 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// export const useProduct = () => useContext(ProductContext);
+export const useProduct = () => useContext(ProductContext);

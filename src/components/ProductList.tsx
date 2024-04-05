@@ -4,7 +4,7 @@ const ProductList = ({ products }) => {
     // console.log(products)
   return (
     <div>
-      {products.map((product) => {
+      {products.map((product: any) => {
         let discountedPrice: number =
           product?.price - product?.price * (product?.discountPercentage / 100);
 
