@@ -69,13 +69,13 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(productReducer, initialState);
-  const fetchProducts = async () => {
+
+  const fetchProducts = async (limit: number) => {
     dispatch({ type: "FETCH_PRODUCTS_PENDING", payload: null });
 
     try {
-      const response = await fetch("https://dummyjson.com/products");
+      const response = await fetch(`${BASE_URL}products?limit=${limit}`);
       const data = await response.json();
-      // console.log("fetch data products", data.products);
       dispatch({ type: "FETCH_PRODUCTS_FULFILLED", payload: data.products });
     } catch (error) {
       console.log("error", error);
@@ -83,13 +83,12 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const fetchSingleProduct = async () => {
+  const fetchSingleProduct = async (id:string) => {
     dispatch({ type: "FETCH_PRODUCT_SINGLE_PENDING", payload: null });
 
     try {
-      const response = await fetch(`https://dummyjson.com/products/1`);
+      const response = await fetch(`${BASE_URL}products/${id}`);
       const data = await response.json();
-      // console.log("data", data);
       dispatch({ type: "FETCH_PRODUCT_SINGLE_FULFILLED", payload: data });
     } catch (error) {
       dispatch({ type: "FETCH_PRODUCT_SINGLE_FAILURE", payload: null });
@@ -97,8 +96,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    fetchProducts();
-    fetchSingleProduct();
+    fetchProducts(40);
+    fetchSingleProduct('id');
   }, []);
 
   return (

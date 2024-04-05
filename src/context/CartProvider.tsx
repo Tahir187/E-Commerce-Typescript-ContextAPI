@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 
 interface CartItem {
   id: string;
-  qunatity: number;
+  quantity: number;
   price: number;
   totalPrice: number;
   stock: number;
@@ -16,7 +16,7 @@ interface CartState {
 }
 
 type CartAction =
-  | { type: "ADD_TO_CART"; payload: CartItem[] }
+  | { type: "ADD_TO_CART"; payload: CartItem }
   | { type: "REMOVE_FROM_CART"; payload: string }
   | { type: "CLEAR_CART" }
   | { type: "GET_CART_TOTAL" }
@@ -43,23 +43,22 @@ const initialCartState: CartState = {
 const CartReducer = (state: CartState, action: CartAction) => {
   switch (action.type) {
     case "ADD_TO_CART": {
-      const isItemInCart = state.carts.find(
-        (item) => item.id === action.payload.id
-      );
+      const { id, quantity } = action.payload;
+
+      const isItemInCart = state.carts.find((item) => item.id === id);
 
       if (isItemInCart) {
         const tempCart = state.carts.map((item) =>
-          item.id === action.payload.id
+          item.id === id
             ? {
                 ...item,
-                quantity: item.qunatity + action.payload.quantity,
-                totalPrice:
-                  (item.qunatity + action.payload.quantity) * item.price,
+                quantity: item.quantity + quantity,
+                totalPrice: (item.quantity + quantity) * item.price,
               }
             : item
         );
         storeInLocalStorage(tempCart);
-        return { ...state, tempCart };
+        return { ...state, carts: tempCart };
       } else {
         const updatedCart = [...state.carts, action.payload];
         storeInLocalStorage(updatedCart);
@@ -89,12 +88,12 @@ const CartReducer = (state: CartState, action: CartAction) => {
               ...item,
               quantity:
                 action.payload.type === "INC"
-                  ? Math.min(item.qunatity + 1, item.stock)
-                  : Math.max(item.qunatity - 1, 1),
+                  ? Math.min(item.quantity + 1, item.stock)
+                  : Math.max(item.quantity - 1, 1),
               totalPrice:
                 action.payload.type === "INC"
-                  ? Math.min(item.qunatity + 1, item.stock) * item.price
-                  : Math.max(item.qunatity - 1, 1) * item.price,
+                  ? Math.min(item.quantity + 1, item.stock) * item.price
+                  : Math.max(item.quantity - 1, 1) * item.price,
             }
           : item
       );
@@ -123,7 +122,7 @@ const CartContext = createContext<{
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(CartReducer, initialState);
+  const [state, dispatch] = useReducer(CartReducer, initialCartState);
 
   useEffect(() => {
     dispatch({ type: "GET_CART_TOTAL" });
