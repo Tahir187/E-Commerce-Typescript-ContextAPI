@@ -92,6 +92,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await fetch(`${BASE_URL}products/categories`);
       const data = await response.json();
+      console.log("category data", data);
       dispatch({ type: "FETCH_CATEGORIES_FULFILLED", payload: data });
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -116,7 +117,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     fetchCategories(dispatch);
-  }, [dispatch]);
+  }, []);
 
   const fetchProductsForCategory = (categoryId: string) =>
   fetchCategoryProducts(dispatch, categoryId);
