@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import { useProduct } from "../context/ProductsProvider";
-import { formatPrice } from "../utils/helper";
 import { STATUS } from "../utils/status";
 import Loader from "../components/Loader";
 import ProductList from "../components/ProductList";
@@ -11,7 +9,6 @@ const Home = () => {
   const { categories, categoriesStatus } = categoryState;
   const { state: productState } = useProduct();
   let { products, productsStatus } = productState;
-
   // console.log("state in home", state);
   // console.log("products in home", products);
   // console.log("status", productsStatus);
