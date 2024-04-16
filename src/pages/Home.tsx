@@ -6,10 +6,11 @@ import { useCategory } from "../context/CategoryProvider";
 import HeaderSlider from "../components/HeaderSlider";
 
 const Home = () => {
-  const { state: categoryState, fetchProductsForCategory } = useCategory();
-  const { categories, categoriesStatus } = categoryState;
+  const { state: categoryState } = useCategory();
+  const { categories } = categoryState;
   const { state: productState } = useProduct();
   let { products, productsStatus } = productState;
+  console.log("categories", categories);
 
   return (
     <main className="bg-gradient-to-br from-transparent via-purple-300 to-transparent">
