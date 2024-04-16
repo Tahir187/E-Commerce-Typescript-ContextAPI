@@ -7,7 +7,7 @@ interface Category {
   title: string;
 }
 
-interface CategoryProduct {
+export interface CategoryProductInterface {
   id: string;
   brand: string;
   category: string;
@@ -20,7 +20,7 @@ interface CategoryProduct {
 interface CategoryState {
   categories: Category[];
   categoriesStatus: string;
-  categoryProducts: CategoryProduct[];
+  categoryProducts: CategoryProductInterface[];
   categoryProductsStatus: string;
 }
 
@@ -29,7 +29,7 @@ type CategoryAction =
   | { type: "FETCH_CATEGORIES_FULFILLED"; payload: Category[] }
   | { type: "FETCH_CATEGORIES_FAILURE" }
   | { type: "FETCH_CATEGORY_PRODUCTS_PENDING"; payload: string }
-  | { type: "FETCH_CATEGORY_PRODUCTS_FULFILLED"; payload: CategoryProduct[] }
+  | { type: "FETCH_CATEGORY_PRODUCTS_FULFILLED"; payload: CategoryProductInterface[] }
   | { type: "FETCH_CATEGORY_PRODUCTS_FAILURE" };
 
 const initialState: CategoryState = {
@@ -73,14 +73,14 @@ const categoryReducer = (state: CategoryState, action: CategoryAction) => {
 };
 
 const CategoryContext = createContext<{
-    state: CategoryState;
-    dispatch: React.Dispatch<CategoryAction>;
-    fetchProductsForCategory: (categoryId: string) => Promise<void>;
-  }>({
-    state: initialState,
-    dispatch: () => null,
-    fetchProductsForCategory: () => Promise.resolve(), 
-  });
+  state: CategoryState;
+  dispatch: React.Dispatch<CategoryAction>;
+  fetchProductsForCategory: (categoryId: string) => Promise<void>;
+}>({
+  state: initialState,
+  dispatch: () => null,
+  fetchProductsForCategory: () => Promise.resolve(),
+});
 
 export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -92,7 +92,7 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await fetch(`${BASE_URL}products/categories`);
       const data = await response.json();
-      console.log("category data", data);
+      console.log("category data", data); 
       dispatch({ type: "FETCH_CATEGORIES_FULFILLED", payload: data });
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -102,12 +102,13 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchCategoryProducts = async (
     dispatch: React.Dispatch<CategoryAction>,
-    categoryId: string
+    category: string
   ) => {
-    dispatch({ type: "FETCH_CATEGORY_PRODUCTS_PENDING", payload: categoryId });
+    dispatch({ type: "FETCH_CATEGORY_PRODUCTS_PENDING", payload: category });
     try {
-      const response = await fetch(`<span class="math-inline">\{BASE\_URL\}products/category/</span>{categoryId}`);
+      const response = await fetch(`${BASE_URL}products/category/${category}`);
       const data = await response.json();
+      console.log("FETCH_CATEGORY_PRODUCTS_FULFILLED", data)
       dispatch({ type: "FETCH_CATEGORY_PRODUCTS_FULFILLED", payload: data.products });
     } catch (error) {
       console.error("Error fetching category products:", error);
@@ -119,8 +120,8 @@ export const CategoryProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchCategories(dispatch);
   }, []);
 
-  const fetchProductsForCategory = (categoryId: string) =>
-  fetchCategoryProducts(dispatch, categoryId);
+  const fetchProductsForCategory = (category: string) =>
+  fetchCategoryProducts(dispatch, category);
 
   return (
 <CategoryContext.Provider

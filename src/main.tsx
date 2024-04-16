@@ -8,12 +8,12 @@ import { CartProvider } from "./context/CartProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CategoryProvider>
-      <ProductProvider>
+    <ProductProvider>
+      <CategoryProvider>
         <CartProvider>
           <App />
         </CartProvider>
-      </ProductProvider>
-    </CategoryProvider>
+      </CategoryProvider>
+    </ProductProvider>
   </React.StrictMode>
 );

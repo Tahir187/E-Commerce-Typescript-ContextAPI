@@ -3,19 +3,17 @@ import { STATUS } from "../utils/status";
 import Loader from "../components/Loader";
 import ProductList from "../components/ProductList";
 import { useCategory } from "../context/CategoryProvider";
+import HeaderSlider from "../components/HeaderSlider";
 
 const Home = () => {
   const { state: categoryState, fetchProductsForCategory } = useCategory();
   const { categories, categoriesStatus } = categoryState;
   const { state: productState } = useProduct();
   let { products, productsStatus } = productState;
-  // console.log("state in home", state);
-  // console.log("products in home", products);
-  // console.log("status", productsStatus);
 
   return (
     <main className="bg-gradient-to-br from-transparent via-purple-300 to-transparent">
-      {/* <h1 className="text-center text-2xl">Products</h1> */}
+      <HeaderSlider />
       {categories.map((category, index) => (
         <div
           className=""
