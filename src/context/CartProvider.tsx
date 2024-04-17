@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 
 interface CartItem {
   id: string;
+  title: string;
   quantity: number;
   price: number;
   totalPrice: number;
@@ -13,6 +14,12 @@ interface CartState {
   itemsCount: number;
   totalAmount: number;
   isCartMessageOn: boolean;
+  removeFromCart: (id: string) => { type: "REMOVE_FROM_CART"; payload: string };
+  toggleCartQty: (payload: { id: string; type: "INC" | "DEC" }) => {
+    type: "TOGGLE_CART_QTY";
+    payload: { id: string; type: "INC" | "DEC" };
+  };
+  clearCart: () => void;
 }
 
 type CartAction =
@@ -38,6 +45,12 @@ const initialCartState: CartState = {
   itemsCount: 0,
   totalAmount: 0,
   isCartMessageOn: false,
+  removeFromCart: (id) => ({ type: "REMOVE_FROM_CART", payload: id }),
+  toggleCartQty: () => ({
+    type: "TOGGLE_CART_QTY",
+    payload: { id: "", type: "INC" },
+  }), 
+  clearCart: () => {},
 };
 
 const CartReducer = (state: CartState, action: CartAction) => {
@@ -72,7 +85,7 @@ const CartReducer = (state: CartState, action: CartAction) => {
     }
     case "CLEAR_CART": {
       storeInLocalStorage([]);
-      return { ...state, carts: [] };
+      return { ...state, carts: [], itemsCount: 0, totalAmount: 0 };
     }
     case "GET_CART_TOTAL": {
       const totalAmount = state.carts.reduce(

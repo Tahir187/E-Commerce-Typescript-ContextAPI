@@ -10,7 +10,7 @@ const Home = () => {
   const { categories } = categoryState;
   const { state: productState } = useProduct();
   let { products, productsStatus } = productState;
-  console.log("categories", categories);
+  // console.log("categories", categories)
 
   return (
     <main className="bg-gradient-to-br from-transparent via-purple-300 to-transparent">
