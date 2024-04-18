@@ -2,13 +2,17 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 import { BASE_URL } from "../utils/apiURL";
 
 interface ProductType {
-  id: string;
+  id: number;
   brand: string;
   category: string;
+  description: string;
   discountPercentage: number;
   thumbnail: string;
   title: string;
   images: string[];
+  price: number
+  rating: number;
+  stock: number;
 }
 
 interface ProductState {
@@ -76,6 +80,8 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await fetch(`${BASE_URL}products?limit=${limit}`);
       const data = await response.json();
+      console.log('products', data);
+
       dispatch({ type: "FETCH_PRODUCTS_FULFILLED", payload: data.products });
     } catch (error) {
       console.log("error", error);
@@ -96,7 +102,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    fetchProducts(40);
+    fetchProducts(10);
     fetchSingleProduct('id');
   }, []);
 

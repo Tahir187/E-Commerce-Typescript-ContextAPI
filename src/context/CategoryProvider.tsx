@@ -8,13 +8,17 @@ interface Category {
 }
 
 export interface CategoryProductInterface {
-  id: string;
+  id: number;
   brand: string;
   category: string;
+  description: string;
   discountPercentage: number;
   thumbnail: string;
   title: string;
   images: string[];
+  price: number
+  rating: number;
+  stock: number;
 }
 
 interface CategoryState {
